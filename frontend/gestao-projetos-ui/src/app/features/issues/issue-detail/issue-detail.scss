@@ -1,0 +1,404 @@
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header-card {
+  padding: 24px !important;
+}
+
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.issue-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.issue-id {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.issue-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.project-info {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.badges-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.badge-group {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .header-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .badges-actions {
+    align-items: flex-start;
+  }
+}
+
+.tabs-card {
+  padding: 8px !important;
+}
+
+.tab-content {
+  padding: 24px 16px;
+}
+
+.tab-counter {
+  margin-left: 8px;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.tab-header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.tab-header-action h3 {
+  margin: 0;
+}
+
+// Info Form
+.info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+// Timesheet items
+.timesheet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timesheet-item {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.timesheet-item:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.log-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.log-date {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.log-hours {
+  font-size: 11px;
+}
+
+.log-desc {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.log-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+// Comments thread
+.comment-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+  max-width: 800px;
+}
+
+.post-btn {
+  align-self: flex-end;
+}
+
+.comments-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.comment-item {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar-icon {
+  color: var(--primary-color);
+}
+
+.comment-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: pre-line;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.comment-actions button {
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 12px !important;
+}
+
+// Attachments
+.attachments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.attachment-item-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.attachment-item-card:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.attachment-icon-wrapper {
+  background-color: rgba(59, 130, 246, 0.1);
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attachment-file-icon {
+  color: var(--primary-color);
+}
+
+.attachment-info-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.attachment-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment-name:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+}
+
+.attachment-meta-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.attachment-actions-btn {
+  display: flex;
+}
+
+// Audit Logs
+.audit-timeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 24px;
+  margin-top: 16px;
+}
+
+.audit-timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.audit-item {
+  display: flex;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.audit-item:last-child {
+  padding-bottom: 0;
+}
+
+.audit-marker {
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 2px solid var(--bg-app);
+}
+
+.audit-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audit-desc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.audit-values {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.audit-old, .audit-new {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.audit-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}

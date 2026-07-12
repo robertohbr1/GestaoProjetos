@@ -1,0 +1,91 @@
+import { Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+import { LoginResponse } from '../../shared/models/models';
+
+interface DecodedToken {
+  nameid?: string;
+  unique_name?: string;
+  role?: string;
+  exp?: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private apiUrl = 'https://localhost:5001/api/auth';
+  private tokenKey = 'gp_auth_token';
+
+  // Signals
+  token = signal<string | null>(null);
+  currentUser = signal<string | null>(null);
+  userRole = signal<string | null>(null);
+  userId = signal<number | null>(null);
+  
+  isLoggedIn = computed(() => !!this.token());
+
+  constructor(private http: HttpClient) {
+    this.loadToken();
+  }
+
+  login(username: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password }).pipe(
+      tap(res => {
+        this.saveToken(res.token);
+      })
+    );
+  }
+
+  register(username: string, email: string, password: string, role: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, { username, email, password, role });
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.token.set(null);
+    this.currentUser.set(null);
+    this.userRole.set(null);
+    this.userId.set(null);
+  }
+
+  private saveToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
+    this.token.set(token);
+    this.decodeAndSetUser(token);
+  }
+
+  private loadToken(): void {
+    const token = localStorage.getItem(this.tokenKey);
+    if (token) {
+      if (this.isTokenExpired(token)) {
+        this.logout();
+      } else {
+        this.token.set(token);
+        this.decodeAndSetUser(token);
+      }
+    }
+  }
+
+  private decodeAndSetUser(token: string): void {
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      this.currentUser.set(decoded.unique_name || null);
+      this.userRole.set(decoded.role || null);
+      this.userId.set(decoded.nameid ? parseInt(decoded.nameid, 10) : null);
+    } catch {
+      this.logout();
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      if (!decoded.exp) return false;
+      return (Math.floor(new Date().getTime() / 1000)) >= decoded.exp;
+    } catch {
+      return true;
+    }
+  }
+}

@@ -1,0 +1,231 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-family: 'Outfit', sans-serif;
+  --bg-app: #080c14;
+  --bg-surface: rgba(16, 22, 38, 0.7);
+  --bg-surface-hover: rgba(26, 34, 56, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  --primary-color: #3b82f6;
+  --primary-glow: rgba(59, 130, 246, 0.15);
+  --accent-color: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.15);
+  
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #06b6d4;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px 0 rgba(59, 130, 246, 0.12);
+  --shadow-glow-accent: 0 0 20px 0 rgba(139, 92, 246, 0.12);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+// Global Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+// Custom Glassmorphism Card
+.glass-card {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 24px;
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+// Typography Helper classes
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// Angular Material overrides for modern tech dark-theme Look
+.mat-mdc-card {
+  background-color: var(--bg-surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.mat-mdc-table {
+  background: transparent !important;
+  width: 100%;
+}
+
+.mat-mdc-header-row {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-header-cell {
+  color: var(--text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-row {
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: background-color 0.2s;
+}
+
+.mat-mdc-row:hover {
+  background-color: var(--bg-surface-hover) !important;
+}
+
+.mat-mdc-cell {
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  font-size: 14px !important;
+}
+
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-tab-header {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-tab {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--primary-color) !important;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Form Overrides
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: var(--text-primary) !important;
+}
+
+.mdc-floating-label {
+  color: var(--text-secondary) !important;
+}
+
+// Status Badges
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-requirement {
+  background-color: rgba(6, 182, 212, 0.15);
+  color: var(--color-info);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.badge-bug {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.badge-improvement {
+  background-color: rgba(139, 92, 246, 0.15);
+  color: var(--accent-color);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+// Status badge mapping
+.status-backlog { background-color: rgba(107, 114, 128, 0.15); color: #d1d5db; border: 1px solid rgba(107, 114, 128, 0.25); }
+.status-pending { background-color: rgba(245, 158, 11, 0.15); color: #fcc419; border: 1px solid rgba(245, 158, 11, 0.25); }
+.status-inanalysis { background-color: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.25); }
+.status-indevelopment { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+.status-intesting { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.25); }
+.status-done { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+.status-cancelled { background-color: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.25); }
+
+// Priority mapping
+.priority-low { color: #9ca3af; }
+.priority-medium { color: #f59e0b; }
+.priority-high { color: #ef4444; }
+.priority-critical { 
+  color: #ef4444; 
+  font-weight: bold;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: #0f1626 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+}
+
+.mat-mdc-dialog-title {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-dialog-content {
+  color: var(--text-secondary) !important;
+}

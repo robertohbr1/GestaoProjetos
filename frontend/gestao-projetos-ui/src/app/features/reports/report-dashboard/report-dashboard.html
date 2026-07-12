@@ -1,0 +1,161 @@
+<div class="dashboard-container">
+  <div>
+    <h1 class="text-gradient">Relatórios & Indicadores</h1>
+    <p class="subtitle">Acompanhamento de entregas, workloads e pendências de TI</p>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid" *ngIf="summary() as sum">
+    <mat-card class="kpi-card card-completed">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>task_alt</mat-icon>
+        <mat-card-title>{{ sum.totalCompleted }}</mat-card-title>
+        <mat-card-subtitle>Demandas Concluídas</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card class="kpi-card card-dev">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>engineering</mat-icon>
+        <mat-card-title>{{ sum.totalInDevelopment }}</mat-card-title>
+        <mat-card-subtitle>Em Desenvolvimento</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card class="kpi-card card-pending">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>schedule</mat-icon>
+        <mat-card-title>{{ sum.totalPending }}</mat-card-title>
+        <mat-card-subtitle>Total Pendentes</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card class="kpi-card card-critical">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>report_problem</mat-icon>
+        <mat-card-title>{{ sum.totalCritical }}</mat-card-title>
+        <mat-card-subtitle>Prioridades Críticas</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+
+  <!-- REPORTS SECTIONS -->
+  <div class="reports-main-layout">
+    
+    <!-- LEFT: COMPLETED & WORKLOAD -->
+    <div class="layout-left">
+      <!-- CONCLUIDOS NO PERIODO -->
+      <div class="glass-card report-section-card">
+        <div class="section-header-row">
+          <h3>Concluído no Período</h3>
+          
+          <form [formGroup]="dateRangeForm" (ngSubmit)="onPeriodSubmit()" class="period-picker-form">
+            <mat-form-field appearance="fill" class="datepicker-field">
+              <mat-label>Período</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate formControlName="startDate" placeholder="Início">
+                <input matEndDate formControlName="endDate" placeholder="Fim">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            
+            <button mat-flat-button color="primary" type="submit">Filtrar</button>
+          </form>
+        </div>
+
+        <div class="report-list" *ngIf="completedIssues().length > 0">
+          <div class="report-item clickable" *ngFor="let item of completedIssues()" [routerLink]="['/issues', item.id]">
+            <div class="item-main">
+              <strong>{{ item.title }}</strong>
+              <span class="item-meta">{{ item.projectName }} | Concluído em {{ item.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <span class="badge badge-improvement">{{ item.implementationType }}</span>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="completedIssues().length === 0">
+          <mat-icon class="empty-icon">check_circle_outline</mat-icon>
+          <p>Nenhuma demanda concluída no período selecionado.</p>
+        </div>
+      </div>
+
+      <!-- EM DESENVOLVIMENTO (WORKLOAD) -->
+      <div class="glass-card report-section-card">
+        <h3>Em Desenvolvimento (Distribuição por Dev)</h3>
+        
+        <div class="workload-grid" *ngIf="workload().length > 0">
+          <div class="workload-dev-card" *ngFor="let dev of workload()">
+            <div class="dev-header">
+              <mat-icon>account_circle</mat-icon>
+              <span>{{ dev.developerName }}</span>
+              <span class="badge status-indevelopment">{{ dev.issues.length }}</span>
+            </div>
+            
+            <div class="dev-issues-list" *ngIf="dev.issues.length > 0">
+              <div class="dev-issue-item clickable" *ngFor="let issue of dev.issues" [routerLink]="['/issues', issue.id]">
+                <span class="dev-issue-title">{{ issue.title }}</span>
+                <span class="badge badge-bug" *ngIf="issue.priority === 'Critical' || issue.priority === 'High'">{{ issue.priority }}</span>
+              </div>
+            </div>
+
+            <div class="empty-dev" *ngIf="dev.issues.length === 0">
+              Nenhuma demanda em desenvolvimento.
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="workload().length === 0">
+          <mat-icon class="empty-icon">engineering</mat-icon>
+          <p>Nenhuma demanda com status 'Em Desenvolvimento'.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PENDENCIAS (BACKLOG) -->
+    <div class="layout-right">
+      <div class="glass-card report-section-card pending-card-full">
+        <div class="section-header-row">
+          <h3>Pendências & Backlog</h3>
+          <span class="badge status-pending">{{ pendingIssues().length }} itens</span>
+        </div>
+
+        <div class="pending-list" *ngIf="pendingIssues().length > 0">
+          <div class="pending-item clickable" *ngFor="let item of pendingIssues()" [routerLink]="['/issues', item.id]">
+            <div class="pending-alert-bar" [ngClass]="{
+              'overdue': isOverdue(item.deadline),
+              'near': isCloseDeadline(item.deadline),
+              'safe': !isOverdue(item.deadline) && !isCloseDeadline(item.deadline)
+            }"></div>
+            
+            <div class="pending-body">
+              <div class="pending-title-row">
+                <strong class="pending-title">{{ item.title }}</strong>
+                <span class="badge" [ngClass]="'status-' + item.status.toLowerCase()">
+                  {{ item.status === 'InAnalysis' ? 'Em Análise' : item.status === 'InTesting' ? 'Em Testes' : item.status }}
+                </span>
+              </div>
+              
+              <div class="pending-meta-row">
+                <span>Projeto: {{ item.projectName }}</span>
+                <span>Dev: <strong>{{ item.assignedToUsername || 'Não alocado' }}</strong></span>
+                <span class="pending-deadline" [ngClass]="{
+                  'deadline-overdue': isOverdue(item.deadline),
+                  'deadline-near': isCloseDeadline(item.deadline)
+                }">
+                  Prazo: {{ (item.deadline | date:'dd/MM/yyyy') || 'Não definido' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="pendingIssues().length === 0">
+          <mat-icon class="empty-icon">list_alt</mat-icon>
+          <p>Nenhuma pendência ativa no momento!</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

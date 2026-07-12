@@ -1,0 +1,301 @@
+<div class="issues-container">
+  <div class="header-actions">
+    <div>
+      <h1 class="text-gradient">Demandas e Requisitos</h1>
+      <p class="subtitle">Controle de bugs, melhorias e desenvolvimento</p>
+    </div>
+    
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> Nova Demanda
+    </button>
+  </div>
+
+  <!-- FILTERS PANEL -->
+  <div class="glass-card filters-card">
+    <form [formGroup]="filterForm" class="filters-grid">
+      <!-- Mandatory Filter -->
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo Impl. (Obrigatório)</mat-label>
+        <mat-select formControlName="implementationType">
+          <mat-option *ngFor="let type of implementationTypes" [value]="type">
+            {{ type === 'CSharp' ? 'C#' : type === 'SqlServer' ? 'SQL Server' : type === 'Others' ? 'Outros' : type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Projeto</mat-label>
+        <mat-select formControlName="projectId">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option *ngFor="let proj of projects()" [value]="proj.id">
+            {{ proj.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option *ngFor="let s of statuses" [value]="s">
+            {{ s === 'InAnalysis' ? 'Em Análise' : s === 'InDevelopment' ? 'Em Desenv.' : s === 'InTesting' ? 'Em Testes' : s === 'Cancelled' ? 'Cancelado' : s === 'Done' ? 'Concluído' : s }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Responsável</mat-label>
+        <mat-select formControlName="assignedToUserId">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option *ngFor="let u of users()" [value]="u.id">
+            {{ u.username }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Prioridade</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option [value]="null">Todas</mat-option>
+          <mat-option *ngFor="let p of priorities" [value]="p">
+            {{ p === 'Low' ? 'Baixa' : p === 'Medium' ? 'Média' : p === 'High' ? 'Alta' : 'Crítica' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Busca rápida</mat-label>
+        <input matInput formControlName="searchTerm" placeholder="Título ou descrição...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <!-- TABLE -->
+  <div class="glass-card table-card">
+    <table mat-table [dataSource]="issues()" class="mat-elevation-z0">
+      
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Título</th>
+        <td mat-cell *matCellDef="let element" class="clickable-cell" (click)="navigateToDetail(element.id)">
+          <strong>{{ element.title }}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Project -->
+      <ng-container matColumnDef="project">
+        <th mat-header-cell *matHeaderCellDef>Projeto</th>
+        <td mat-cell *matCellDef="let element">{{ element.projectName }}</td>
+      </ng-container>
+
+      <!-- Type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="badge" [ngClass]="'badge-' + element.issueType.toLowerCase()">
+            {{ element.issueType === 'Requirement' ? 'Requisito' : element.issueType === 'Bug' ? 'Bug' : 'Melhoria' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Priority -->
+      <ng-container matColumnDef="priority">
+        <th mat-header-cell *matHeaderCellDef>Prioridade</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button [matMenuTriggerFor]="priorityMenu" [ngClass]="'priority-' + element.priority.toLowerCase()" class="priority-trigger-btn">
+            {{ element.priority === 'Low' ? 'Baixa' : element.priority === 'Medium' ? 'Média' : element.priority === 'High' ? 'Alta' : 'Crítica' }}
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+          
+          <mat-menu #priorityMenu="matMenu">
+            <button mat-menu-item *ngFor="let p of priorities" (click)="changePriority($event, element, p)">
+              <span [ngClass]="'priority-' + p.toLowerCase()">{{ p === 'Low' ? 'Baixa' : p === 'Medium' ? 'Média' : p === 'High' ? 'Alta' : 'Crítica' }}</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button [matMenuTriggerFor]="statusMenu" class="badge status-trigger-btn" [ngClass]="'status-' + element.status.toLowerCase()">
+            {{ element.status === 'InAnalysis' ? 'Em Análise' : element.status === 'InDevelopment' ? 'Em Desenv.' : element.status === 'InTesting' ? 'Em Testes' : element.status === 'Cancelled' ? 'Cancelado' : element.status === 'Done' ? 'Concluído' : element.status }}
+            <mat-icon class="status-drop-icon">arrow_drop_down</mat-icon>
+          </button>
+
+          <mat-menu #statusMenu="matMenu">
+            <button mat-menu-item *ngFor="let s of statuses" (click)="changeStatus($event, element, s)">
+              <span class="badge" [ngClass]="'status-' + s.toLowerCase()">
+                {{ s === 'InAnalysis' ? 'Em Análise' : s === 'InDevelopment' ? 'Em Desenv.' : s === 'InTesting' ? 'Em Testes' : s === 'Cancelled' ? 'Cancelado' : s === 'Done' ? 'Concluído' : s }}
+              </span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <!-- Assigned To -->
+      <ng-container matColumnDef="assignedTo">
+        <th mat-header-cell *matHeaderCellDef>Atribuído</th>
+        <td mat-cell *matCellDef="let element">
+          <span [class.text-muted]="!element.assignedToUsername">
+            {{ element.assignedToUsername || 'Não alocado' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Deadline -->
+      <ng-container matColumnDef="deadline">
+        <th mat-header-cell *matHeaderCellDef>Prazo</th>
+        <td mat-cell *matCellDef="let element">
+          <span [class.priority-critical]="isOverdue(element.deadline) && element.status !== 'Done'">
+            {{ (element.deadline | date:'dd/MM/yyyy') || '-' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-header">Ações</th>
+        <td mat-cell *matCellDef="let element" class="actions-cell">
+          <button mat-icon-button color="primary" (click)="openEditDialog($event, element)" title="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteIssue($event, element.id)" title="Remover" *ngIf="authService.userRole() === 'Administrator'">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="clickable-row"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="!isLoading() && issues().length === 0">
+      <mat-icon class="empty-icon">search_off</mat-icon>
+      <p>Nenhuma demanda encontrada para os filtros selecionados.</p>
+    </div>
+  </div>
+
+  <!-- CREATE/EDIT DIALOG -->
+  <ng-template #issueDialog>
+    <h2 mat-dialog-title>{{ editingIssue() ? 'Editar Demanda' : 'Nova Demanda' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="issueForm" class="dialog-form">
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Projeto</mat-label>
+            <mat-select formControlName="projectId">
+              <mat-option *ngFor="let proj of projects()" [value]="proj.id">
+                {{ proj.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="issueForm.get('projectId')?.hasError('required')">Projeto é obrigatório.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo Impl.</mat-label>
+            <mat-select formControlName="implementationType">
+              <mat-option *ngFor="let type of implementationTypes" [value]="type">
+                {{ type === 'CSharp' ? 'C#' : type === 'SqlServer' ? 'SQL Server' : type === 'Others' ? 'Outros' : type }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="issueForm.get('implementationType')?.hasError('required')">Tipo Impl. é obrigatório.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Título</mat-label>
+          <input matInput formControlName="title" placeholder="Ex: Ajustar login com JWT">
+          <mat-error *ngIf="issueForm.get('title')?.hasError('required')">Título é obrigatório.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Descrição</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Descreva os requisitos ou bug..."></textarea>
+          <mat-error *ngIf="issueForm.get('description')?.hasError('required')">Descrição é obrigatória.</mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Demanda</mat-label>
+            <mat-select formControlName="issueType">
+              <mat-option *ngFor="let type of issueTypes" [value]="type">
+                {{ type === 'Requirement' ? 'Requisito' : type === 'Bug' ? 'Bug' : 'Melhoria' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Prioridade</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let p of priorities" [value]="p">
+                {{ p === 'Low' ? 'Baixa' : p === 'Medium' ? 'Média' : p === 'High' ? 'Alta' : 'Crítica' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of statuses" [value]="s">
+                {{ s === 'InAnalysis' ? 'Em Análise' : s === 'InDevelopment' ? 'Em Desenv.' : s === 'InTesting' ? 'Em Testes' : s === 'Cancelled' ? 'Cancelado' : s === 'Done' ? 'Concluído' : s }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Atribuir a (Desenvolvedor)</mat-label>
+            <mat-select formControlName="assignedToUserId">
+              <mat-option [value]="null">Não alocado</mat-option>
+              <mat-option *ngFor="let u of users()" [value]="u.id">
+                {{ u.username }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Solicitado por</mat-label>
+            <input matInput formControlName="requestedBy" placeholder="Ex: Área de Negócios">
+            <mat-error *ngIf="issueForm.get('requestedBy')?.hasError('required')">Solicitante é obrigatório.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Prazo de Entrega (Deadline)</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="deadline">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Data de Início</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Data de Término</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-raised-button color="primary" (click)="saveIssue()" [disabled]="issueForm.invalid">
+        Salvar
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

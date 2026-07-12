@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Lançar Horas (Timesheet)</h2>
+<mat-dialog-content>
+  <form [formGroup]="timesheetForm" class="dialog-form">
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Data do Apontamento</mat-label>
+      <input matInput [matDatepicker]="logDatePicker" formControlName="loggedDate">
+      <mat-datepicker-toggle matIconSuffix [for]="logDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #logDatePicker></mat-datepicker>
+      <mat-error *ngIf="timesheetForm.get('loggedDate')?.hasError('required')">
+        Data é obrigatória.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Horas Trabalhadas</mat-label>
+      <input matInput formControlName="hoursSpent" type="number" step="0.5" placeholder="Ex: 4.5">
+      <mat-error *ngIf="timesheetForm.get('hoursSpent')?.hasError('required')">
+        Horas são obrigatórias.
+      </mat-error>
+      <mat-error *ngIf="timesheetForm.get('hoursSpent')?.hasError('min')">
+        Mínimo de 0.1 hora.
+      </mat-error>
+      <mat-error *ngIf="timesheetForm.get('hoursSpent')?.hasError('max')">
+        Máximo de 24 horas por lançamento.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descrição das Atividades</mat-label>
+      <textarea matInput formControlName="workDescription" rows="4" placeholder="O que você desenvolveu..."></textarea>
+      <mat-error *ngIf="timesheetForm.get('workDescription')?.hasError('required')">
+        Descrição da atividade é obrigatória.
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="timesheetForm.invalid">
+    Lançar Horas
+  </button>
+</mat-dialog-actions>

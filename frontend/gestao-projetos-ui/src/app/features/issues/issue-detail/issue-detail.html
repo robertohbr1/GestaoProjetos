@@ -1,0 +1,315 @@
+<div class="detail-container" *ngIf="issue() as data">
+  <!-- HEADER PANEL -->
+  <div class="glass-card header-card">
+    <div class="header-main">
+      <div class="title-section">
+        <div class="issue-meta">
+          <span class="issue-id">#{{ data.id }}</span>
+          <span class="badge" [ngClass]="'badge-' + data.issueType.toLowerCase()">
+            {{ data.issueType === 'Requirement' ? 'Requisito' : data.issueType === 'Bug' ? 'Bug' : 'Melhoria' }}
+          </span>
+          <span class="badge status-backlog">{{ data.implementationType === 'CSharp' ? 'C#' : data.implementationType }}</span>
+        </div>
+        <h1 class="issue-title">{{ data.title }}</h1>
+        <p class="project-info">Projeto: <strong>{{ data.projectName }}</strong> | Solicitante: <strong>{{ data.requestedBy }}</strong></p>
+      </div>
+
+      <div class="badges-actions">
+        <div class="badge-group">
+          <span class="badge" [ngClass]="'status-' + data.status.toLowerCase()">
+            {{ data.status === 'InAnalysis' ? 'Em Análise' : data.status === 'InDevelopment' ? 'Em Desenv.' : data.status === 'InTesting' ? 'Em Testes' : data.status === 'Cancelled' ? 'Cancelado' : data.status === 'Done' ? 'Concluído' : data.status }}
+          </span>
+          <span class="badge" [ngClass]="'status-backlog priority-' + data.priority.toLowerCase()">
+            Prioridade: {{ data.priority === 'Low' ? 'Baixa' : data.priority === 'Medium' ? 'Média' : data.priority === 'High' ? 'Alta' : 'Crítica' }}
+          </span>
+        </div>
+        
+        <button mat-flat-button color="warn" (click)="deleteIssue()" *ngIf="authService.userRole() === 'Administrator'">
+          <mat-icon>delete</mat-icon> Remover Demanda
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS CONTAINER -->
+  <div class="glass-card tabs-card">
+    <mat-tab-group animationDuration="200ms">
+      
+      <!-- TAB 1: INFORMACAO -->
+      <mat-tab label="Informações">
+        <div class="tab-content">
+          <form [formGroup]="infoForm" (ngSubmit)="saveInfo()" class="info-form" *ngIf="infoForm">
+            <div class="form-row">
+              <mat-form-field appearance="fill">
+                <mat-label>Projeto</mat-label>
+                <mat-select formControlName="projectId">
+                  <mat-option *ngFor="let proj of projects()" [value]="proj.id">
+                    {{ proj.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Tipo Impl.</mat-label>
+                <mat-select formControlName="implementationType">
+                  <mat-option *ngFor="let type of implementationTypes" [value]="type">
+                    {{ type === 'CSharp' ? 'C#' : type === 'SqlServer' ? 'SQL Server' : type === 'Others' ? 'Outros' : type }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Título</mat-label>
+              <input matInput formControlName="title">
+              <mat-error *ngIf="infoForm.get('title')?.hasError('required')">Título é obrigatório.</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Descrição</mat-label>
+              <textarea matInput formControlName="description" rows="5"></textarea>
+              <mat-error *ngIf="infoForm.get('description')?.hasError('required')">Descrição é obrigatória.</mat-error>
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="fill">
+                <mat-label>Tipo de Demanda</mat-label>
+                <mat-select formControlName="issueType">
+                  <mat-option *ngFor="let type of issueTypes" [value]="type">
+                    {{ type === 'Requirement' ? 'Requisito' : type === 'Bug' ? 'Bug' : 'Melhoria' }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Prioridade</mat-label>
+                <mat-select formControlName="priority">
+                  <mat-option *ngFor="let p of priorities" [value]="p">
+                    {{ p === 'Low' ? 'Baixa' : p === 'Medium' ? 'Média' : p === 'High' ? 'Alta' : 'Crítica' }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="fill">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let s of statuses" [value]="s">
+                    {{ s === 'InAnalysis' ? 'Em Análise' : s === 'InDevelopment' ? 'Em Desenv.' : s === 'InTesting' ? 'Em Testes' : s === 'Cancelled' ? 'Cancelado' : s === 'Done' ? 'Concluído' : s }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Desenvolvedor Responsável</mat-label>
+                <mat-select formControlName="assignedToUserId">
+                  <mat-option [value]="null">Não alocado</mat-option>
+                  <mat-option *ngFor="let u of users()" [value]="u.id">
+                    {{ u.username }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="fill">
+                <mat-label>Solicitado por</mat-label>
+                <input matInput formControlName="requestedBy">
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Prazo de Entrega (Deadline)</mat-label>
+                <input matInput [matDatepicker]="detailDeadlinePicker" formControlName="deadline">
+                <mat-datepicker-toggle matIconSuffix [for]="detailDeadlinePicker"></mat-datepicker-toggle>
+                <mat-datepicker #detailDeadlinePicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="fill">
+                <mat-label>Data de Início</mat-label>
+                <input matInput [matDatepicker]="detailStartPicker" formControlName="startDate">
+                <mat-datepicker-toggle matIconSuffix [for]="detailStartPicker"></mat-datepicker-toggle>
+                <mat-datepicker #detailStartPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Data de Término</mat-label>
+                <input matInput [matDatepicker]="detailEndPicker" formControlName="endDate">
+                <mat-datepicker-toggle matIconSuffix [for]="detailEndPicker"></mat-datepicker-toggle>
+                <mat-datepicker #detailEndPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="infoForm.invalid">
+                Salvar Alterações
+              </button>
+              <a mat-button routerLink="/issues">Voltar</a>
+            </div>
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 2: TIMESHEET -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Apontamentos
+          <span class="tab-counter status-done">{{ data.totalHoursLogged }}h</span>
+        </ng-template>
+        
+        <div class="tab-content">
+          <div class="tab-header-action">
+            <h3>Lançamentos de Horas (Timesheet)</h3>
+            <button mat-raised-button color="primary" (click)="openTimesheetDialog()">
+              <mat-icon>add</mat-icon> Apontar Horas
+            </button>
+          </div>
+
+          <div class="timesheet-list" *ngIf="data.timeLogs.length > 0">
+            <div class="timesheet-item" *ngFor="let log of data.timeLogs">
+              <div class="log-info">
+                <span class="log-date">{{ log.loggedDate | date:'dd/MM/yyyy' }}</span>
+                <span class="log-user">por <strong>{{ log.username }}</strong></span>
+                <span class="badge status-indevelopment log-hours">{{ log.hoursSpent }}h</span>
+              </div>
+              <p class="log-desc">{{ log.workDescription }}</p>
+              
+              <div class="log-actions" *ngIf="authService.currentUser() === log.username || authService.userRole() === 'Administrator'">
+                <button mat-icon-button color="warn" (click)="deleteTimeLog(log.id)" title="Remover apontamento">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="data.timeLogs.length === 0">
+            <mat-icon class="empty-icon">history_toggle_off</mat-icon>
+            <p>Nenhum lançamento de horas realizado para esta demanda.</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 3: COMENTARIOS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Comentários
+          <span class="tab-counter status-backlog">{{ data.comments.length }}</span>
+        </ng-template>
+        
+        <div class="tab-content">
+          <h3>Discussão colaborativa</h3>
+          
+          <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-input-form">
+            <mat-form-field appearance="fill">
+              <mat-label>Adicionar comentário...</mat-label>
+              <textarea matInput formControlName="content" rows="3" placeholder="Digite sua mensagem..."></textarea>
+              <mat-error *ngIf="commentForm.get('content')?.hasError('required')">Mensagem vazia.</mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid" class="post-btn">
+              Comentar
+            </button>
+          </form>
+
+          <div class="comments-thread" *ngIf="data.comments.length > 0">
+            <div class="comment-item" *ngFor="let c of data.comments">
+              <div class="comment-header">
+                <div class="comment-user">
+                  <mat-icon class="user-avatar-icon">account_circle</mat-icon>
+                  <strong>{{ c.username }}</strong>
+                </div>
+                <span class="comment-date">{{ c.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <p class="comment-text">{{ c.content }}</p>
+              
+              <div class="comment-actions" *ngIf="authService.currentUser() === c.username || authService.userRole() === 'Administrator'">
+                <button mat-button color="warn" (click)="deleteComment(c.id)">Excluir</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="data.comments.length === 0">
+            <mat-icon class="empty-icon">chat_bubble_outline</mat-icon>
+            <p>Nenhum comentário nesta demanda. Inicie a conversa!</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 4: ANEXOS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Anexos
+          <span class="tab-counter status-backlog">{{ data.attachments.length }}</span>
+        </ng-template>
+        
+        <div class="tab-content">
+          <div class="tab-header-action">
+            <h3>Documentos e Evidências</h3>
+            <div>
+              <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+              <button mat-raised-button color="accent" (click)="fileInput.click()">
+                <mat-icon>cloud_upload</mat-icon> Anexar Arquivo
+              </button>
+            </div>
+          </div>
+
+          <div class="attachments-grid" *ngIf="data.attachments.length > 0">
+            <div class="attachment-item-card" *ngFor="let a of data.attachments">
+              <div class="attachment-icon-wrapper">
+                <mat-icon class="attachment-file-icon">insert_drive_file</mat-icon>
+              </div>
+              <div class="attachment-info-details">
+                <span class="attachment-name" (click)="downloadAttachment(a.id, a.fileName)">{{ a.fileName }}</span>
+                <span class="attachment-meta-text">Por {{ a.uploadedBy }} em {{ a.uploadedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <div class="attachment-actions-btn">
+                <button mat-icon-button color="primary" (click)="downloadAttachment(a.id, a.fileName)" title="Baixar">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteAttachment(a.id)" title="Remover" *ngIf="authService.currentUser() === a.uploadedBy || authService.userRole() === 'Administrator'">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="data.attachments.length === 0">
+            <mat-icon class="empty-icon">attach_file</mat-icon>
+            <p>Nenhum anexo adicionado. Suporte para prints, PDFs e DOCX.</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 5: AUDIT LOG -->
+      <mat-tab label="Histórico">
+        <div class="tab-content">
+          <h3>Log de Auditoria simples</h3>
+          
+          <div class="audit-timeline" *ngIf="data.auditLogs.length > 0">
+            <div class="audit-item" *ngFor="let log of data.auditLogs">
+              <div class="audit-marker"></div>
+              <div class="audit-details">
+                <p class="audit-desc">
+                  Alteração no campo <strong>{{ log.fieldChanged === 'AssignedUser' ? 'Responsável' : log.fieldChanged === 'Status' ? 'Status' : log.fieldChanged === 'Priority' ? 'Prioridade' : log.fieldChanged }}</strong> 
+                  por <strong>{{ log.username }}</strong>
+                </p>
+                <div class="audit-values">
+                  <span class="audit-old" *ngIf="log.oldValue">De: <span class="badge status-backlog">{{ log.oldValue }}</span></span>
+                  <span class="audit-new" *ngIf="log.newValue">Para: <span class="badge status-indevelopment">{{ log.newValue }}</span></span>
+                </div>
+                <span class="audit-date">{{ log.changedAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="data.auditLogs.length === 0">
+            <mat-icon class="empty-icon">history</mat-icon>
+            <p>Nenhum histórico registrado para esta demanda.</p>
+          </div>
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  </div>
+</div>

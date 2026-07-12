@@ -1,0 +1,326 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 14px;
+}
+
+// KPI Grid
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.kpi-card {
+  padding: 16px !important;
+  border-radius: 12px;
+}
+
+.kpi-card mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.kpi-card .mat-mdc-card-title {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  margin-top: 4px;
+}
+
+.kpi-card .mat-mdc-card-subtitle {
+  font-size: 13px !important;
+  color: var(--text-secondary) !important;
+}
+
+.card-completed {
+  border-left: 4px solid var(--color-success) !important;
+}
+.card-completed mat-icon {
+  color: var(--color-success);
+}
+
+.card-dev {
+  border-left: 4px solid var(--primary-color) !important;
+}
+.card-dev mat-icon {
+  color: var(--primary-color);
+}
+
+.card-pending {
+  border-left: 4px solid var(--color-warning) !important;
+}
+.card-pending mat-icon {
+  color: var(--color-warning);
+}
+
+.card-critical {
+  border-left: 4px solid var(--color-danger) !important;
+}
+.card-critical mat-icon {
+  color: var(--color-danger);
+}
+
+// Reports Main Layout
+.reports-main-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 24px;
+}
+
+.layout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.layout-right {
+  display: flex;
+}
+
+.report-section-card {
+  height: 100%;
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+.section-header-row h3 {
+  margin: 0;
+}
+
+.period-picker-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.datepicker-field {
+  width: 250px;
+}
+
+// Completed report list
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.report-item {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.report-item.clickable:hover {
+  border-color: var(--color-success);
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+// Workload Dev Grid
+.workload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.workload-dev-card {
+  background-color: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: fit-content;
+}
+
+.dev-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.dev-header mat-icon {
+  color: var(--primary-color);
+}
+
+.dev-issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dev-issue-item {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.dev-issue-item.clickable:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.dev-issue-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-dev {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 12px;
+}
+
+// Pending List
+.pending-card-full {
+  width: 100%;
+}
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 700px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.pending-item {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.pending-item.clickable:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.pending-alert-bar {
+  width: 6px;
+}
+
+.pending-alert-bar.overdue {
+  background-color: var(--color-danger);
+}
+.pending-alert-bar.near {
+  background-color: var(--color-warning);
+}
+.pending-alert-bar.safe {
+  background-color: var(--color-info);
+}
+
+.pending-body {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.pending-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pending-title {
+  font-size: 14px;
+}
+
+.pending-meta-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.pending-deadline {
+  font-weight: 500;
+}
+
+.deadline-overdue {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.deadline-near {
+  color: var(--color-warning);
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .reports-main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
