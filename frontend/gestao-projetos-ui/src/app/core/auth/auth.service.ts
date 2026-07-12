@@ -9,6 +9,7 @@ interface DecodedToken {
   unique_name?: string;
   role?: string;
   exp?: number;
+  [key: string]: any;
 }
 
 @Injectable({
@@ -71,9 +72,13 @@ export class AuthService {
   private decodeAndSetUser(token: string): void {
     try {
       const decoded = jwtDecode<DecodedToken>(token);
-      this.currentUser.set(decoded.unique_name || null);
-      this.userRole.set(decoded.role || null);
-      this.userId.set(decoded.nameid ? parseInt(decoded.nameid, 10) : null);
+      const name = decoded.unique_name || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || null;
+      const role = decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || null;
+      const idStr = decoded.nameid || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || null;
+
+      this.currentUser.set(name);
+      this.userRole.set(role);
+      this.userId.set(idStr ? parseInt(idStr, 10) : null);
     } catch {
       this.logout();
     }
