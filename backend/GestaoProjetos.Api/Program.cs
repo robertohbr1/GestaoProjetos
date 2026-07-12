@@ -7,41 +7,20 @@ using GestaoProjetos.Api.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+using Microsoft.AspNetCore.OpenApi;
+using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure Swagger/OpenAPI with JWT Authorize
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
+// Configure OpenAPI document generation
+builder.Services.AddOpenApi(options =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "GestaoProjetos.Api", Version = "v1" });
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Insira o token JWT neste formato: Bearer {seu_token}",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
 });
 
 // Configure EF Core with SQL Server
@@ -104,8 +83,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
@@ -190,3 +169,34 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider) 
+    : IOpenApiDocumentTransformer
+{
+    public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+    {
+        var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
+        
+        if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
+        {
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header
+            };
+
+            document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes["Bearer"] = securityScheme;
+
+            foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
+            {
+                operation.Value.Security.Add(new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
+            }
+        }
+    }
+}
