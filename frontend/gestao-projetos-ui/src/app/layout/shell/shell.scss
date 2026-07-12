@@ -15,7 +15,7 @@
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 24px;
   border-bottom: 1px solid var(--border-color);
 }
@@ -38,7 +38,7 @@ mat-nav-list {
 }
 
 mat-nav-list a {
-  margin: 4px 12px !important;
+  margin: 4px 14px !important;
   border-radius: 8px !important;
   color: var(--text-secondary) !important;
   transition: all 0.3s;
@@ -65,7 +65,7 @@ mat-nav-list a:hover {
 
 .glass-toolbar {
   background-color: rgba(8, 12, 20, 0.6) !important;
-  backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(14px) !important;
   border-bottom: 1px solid var(--border-color) !important;
 }
 
@@ -76,7 +76,7 @@ mat-nav-list a:hover {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .user-name {

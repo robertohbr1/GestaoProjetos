@@ -79,7 +79,7 @@
 
 .tab-counter {
   margin-left: 8px;
-  font-size: 11px;
+  font-size: 14px;
   padding: 2px 6px;
   border-radius: 999px;
   font-weight: 600;
@@ -116,8 +116,8 @@
 
 .form-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 14px;
+  margin-top: 14px;
 }
 
 @media (max-width: 600px) {
@@ -131,7 +131,7 @@
 .timesheet-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .timesheet-item {
@@ -154,8 +154,8 @@
 .log-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 13px;
+  gap: 14px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -165,7 +165,7 @@
 }
 
 .log-hours {
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .log-desc {
@@ -184,7 +184,7 @@
 .comment-input-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   margin-bottom: 32px;
   max-width: 800px;
 }
@@ -227,7 +227,7 @@
 }
 
 .comment-date {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -247,7 +247,7 @@
 .comment-actions button {
   height: 28px !important;
   line-height: 28px !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 
 // Attachments
@@ -261,10 +261,10 @@
   background-color: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   transition: all 0.3s;
 }
 
@@ -309,7 +309,7 @@
 }
 
 .attachment-meta-text {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -350,8 +350,8 @@
   position: absolute;
   left: -24px;
   top: 6px;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background-color: var(--primary-color);
   border: 2px solid var(--bg-app);
@@ -371,8 +371,8 @@
 
 .audit-values {
   display: flex;
-  gap: 12px;
-  font-size: 12px;
+  gap: 14px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -383,7 +383,7 @@
 }
 
 .audit-date {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--text-muted);
 }
 
@@ -400,5 +400,5 @@
   font-size: 48px;
   width: 48px;
   height: 48px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
