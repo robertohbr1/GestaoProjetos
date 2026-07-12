@@ -7,7 +7,7 @@ import { IssueResponse, IssueDetailResponse, IssueRequest } from '../models/mode
   providedIn: 'root'
 })
 export class IssueService {
-  private apiUrl = 'https://localhost:5001/api/issues';
+  private apiUrl = 'http://localhost:5151/api/issues';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { DashboardSummary, DeveloperWorkload, IssueResponse } from '../models/mo
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = 'https://localhost:5001/api/reports';
+  private apiUrl = 'http://localhost:5151/api/reports';
 
   constructor(private http: HttpClient) {}
 

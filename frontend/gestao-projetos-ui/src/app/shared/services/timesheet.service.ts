@@ -7,7 +7,7 @@ import { TimeLogResponse, TimeLogRequest } from '../models/models';
   providedIn: 'root'
 })
 export class TimesheetService {
-  private apiUrl = 'https://localhost:5001/api/timelogs';
+  private apiUrl = 'http://localhost:5151/api/timelogs';
 
   constructor(private http: HttpClient) {}
 

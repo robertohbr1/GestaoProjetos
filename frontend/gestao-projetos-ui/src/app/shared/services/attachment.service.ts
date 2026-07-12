@@ -7,7 +7,7 @@ import { AttachmentResponse } from '../models/models';
   providedIn: 'root'
 })
 export class AttachmentService {
-  private apiUrl = 'https://localhost:5001/api/attachments';
+  private apiUrl = 'http://localhost:5151/api/attachments';
 
   constructor(private http: HttpClient) {}
 

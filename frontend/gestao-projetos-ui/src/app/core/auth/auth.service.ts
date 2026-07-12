@@ -15,7 +15,7 @@ interface DecodedToken {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:5001/api/auth';
+  private apiUrl = 'http://localhost:5151/api/auth';
   private tokenKey = 'gp_auth_token';
 
   // Signals

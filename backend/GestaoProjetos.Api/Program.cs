@@ -177,7 +177,7 @@ public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvide
     {
         var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
         
-        if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
+        if (authenticationSchemes != null && authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
         {
             var securityScheme = new OpenApiSecurityScheme
             {
@@ -188,14 +188,28 @@ public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvide
             };
 
             document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
             document.Components.SecuritySchemes["Bearer"] = securityScheme;
 
-            foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
+            if (document.Paths != null)
             {
-                operation.Value.Security.Add(new OpenApiSecurityRequirement
+                foreach (var path in document.Paths.Values)
                 {
-                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-                });
+                    if (path.Operations != null)
+                    {
+                        foreach (var operation in path.Operations.Values)
+                        {
+                            if (operation != null)
+                            {
+                                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                                operation.Security.Add(new OpenApiSecurityRequirement
+                                {
+                                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                                });
+                            }
+                        }
+                    }
+                }
             }
         }
     }
