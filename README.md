@@ -82,7 +82,7 @@ c:\Projetos\GestaoProjetos\
    ```bash
    dotnet run
    ```
-   > O servidor iniciará em `http://localhost:5151`. A documentação e testes rápidos de API (Swagger) estarão acessíveis em `http://localhost:5151/swagger`. O banco de dados será gerado automaticamente.
+   > O servidor iniciará em `http://localhost:5151`. A documentação e testes rápidos de API (Scalar) estarão acessíveis em `http://localhost:5151/scalar/v1`. O banco de dados será gerado automaticamente.
 
 ---
 
