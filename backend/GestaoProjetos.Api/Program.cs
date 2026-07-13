@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using GestaoProjetos.Api.Application.Services;
 using GestaoProjetos.Api.Domain.Entities;
 using GestaoProjetos.Api.Domain.Enums;
@@ -15,7 +16,15 @@ using Microsoft.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+// JsonStringEnumConverter allows the API to accept enum values as strings ("Backlog", "Angular")
+// instead of integers, which is what the Angular frontend sends.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+
 
 // Configure OpenAPI document generation
 builder.Services.AddOpenApi(options =>

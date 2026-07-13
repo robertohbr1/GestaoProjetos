@@ -2,6 +2,7 @@ import { Component, OnInit, signal, TemplateRef, ViewChild, inject } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -173,7 +174,14 @@ export class IssueListComponent implements OnInit {
   }
 
   saveIssue(): void {
-    if (this.issueForm.invalid) return;
+    if (this.issueForm.invalid) {
+      this.issueForm.markAllAsTouched();
+      const missingProject = !this.issueForm.get('projectId')?.value;
+      if (missingProject) {
+        this.snackBar.open('Selecione um Projeto antes de salvar.', 'Fechar', { duration: 4000 });
+      }
+      return;
+    }
 
     const request = this.issueForm.value;
     const editing = this.editingIssue();
@@ -185,7 +193,10 @@ export class IssueListComponent implements OnInit {
           this.dialogRef?.close();
           this.loadIssues();
         },
-        error: () => this.snackBar.open('Erro ao atualizar demanda.', 'Fechar', { duration: 3000 })
+        error: (err: HttpErrorResponse) => {
+          const msg = err.error?.message ?? err.error?.title ?? 'Erro ao atualizar demanda.';
+          this.snackBar.open(msg, 'Fechar', { duration: 5000 });
+        }
       });
     } else {
       this.issueService.create(request).subscribe({
@@ -194,7 +205,10 @@ export class IssueListComponent implements OnInit {
           this.dialogRef?.close();
           this.loadIssues();
         },
-        error: () => this.snackBar.open('Erro ao criar demanda.', 'Fechar', { duration: 3000 })
+        error: (err: HttpErrorResponse) => {
+          const msg = err.error?.message ?? err.error?.title ?? 'Erro ao criar demanda.';
+          this.snackBar.open(msg, 'Fechar', { duration: 5000 });
+        }
       });
     }
   }

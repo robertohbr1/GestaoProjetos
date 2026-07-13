@@ -88,7 +88,14 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
-// Angular Material overrides for modern tech dark-theme Look
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPREHENSIVE DARK-THEME OVERRIDES FOR ANGULAR MATERIAL MDC
+// The project uses the prebuilt indigo-pink.css (light theme base), so every
+// component that renders on a dark background must be explicitly overridden.
+// WCAG AA: minimum 4.5:1 contrast ratio for normal text on dark backgrounds.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Cards ────────────────────────────────────────────────────────────────────
 .mat-mdc-card {
   background-color: var(--bg-surface) !important;
   border: 1px solid var(--border-color) !important;
@@ -97,6 +104,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-md) !important;
 }
 
+// ── Tables ───────────────────────────────────────────────────────────────────
 .mat-mdc-table {
   background: transparent !important;
   width: 100%;
@@ -126,43 +134,209 @@ h1, h2, h3, h4, h5, h6 {
 .mat-mdc-cell {
   color: var(--text-primary) !important;
   border-bottom: 1px solid var(--border-color) !important;
-  font-size: 14px !important;
+  font-size: 15px !important;
 }
 
+// ── Paginator ────────────────────────────────────────────────────────────────
 .mat-mdc-paginator {
   background: transparent !important;
   color: var(--text-secondary) !important;
   border-top: 1px solid var(--border-color) !important;
+
+  .mat-mdc-paginator-range-label,
+  .mat-mdc-paginator-page-size-label,
+  .mat-mdc-select-value-text,
+  .mdc-list-item__primary-text {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+  }
+
+  .mat-mdc-icon-button[disabled] mat-icon {
+    opacity: 0.4;
+  }
 }
 
+// ── Tabs ─────────────────────────────────────────────────────────────────────
 .mat-mdc-tab-header {
   border-bottom: 1px solid var(--border-color) !important;
 }
 
-.mat-mdc-tab {
+.mat-mdc-tab,
+.mat-mdc-tab .mdc-tab__text-label {
   color: var(--text-secondary) !important;
+  font-size: 15px !important;
 }
 
 .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
   color: var(--primary-color) !important;
 }
 
+// ── Form Fields (all states: filled / outlined) ───────────────────────────────
 .mat-mdc-form-field {
   width: 100%;
 }
 
-// Form Overrides
+// Background of filled text fields
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-  background-color: rgba(255, 255, 255, 0.03) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px 8px 0 0 !important;
 }
 
-.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+.mdc-text-field--filled:not(.mdc-text-field--disabled):hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+// Focused state - ripple line at the bottom
+.mdc-text-field--filled.mdc-text-field--focused:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+// Input text value
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input,
+.mat-mdc-input-element {
   color: var(--text-primary) !important;
+  font-size: 15px !important;
+  caret-color: var(--primary-color) !important;
 }
 
-.mdc-floating-label {
+// Floating / resting label
+.mdc-floating-label,
+.mdc-floating-label--float-above {
   color: var(--text-secondary) !important;
+  font-size: 15px !important;
 }
+
+.mdc-text-field--focused .mdc-floating-label {
+  color: var(--primary-color) !important;
+}
+
+// Bottom line / active indicator
+.mdc-line-ripple::before {
+  border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.mdc-line-ripple::after {
+  border-bottom-color: var(--primary-color) !important;
+}
+
+// Suffix / prefix icons
+.mat-mdc-form-field .mat-mdc-form-field-icon-suffix mat-icon,
+.mat-mdc-form-field .mat-mdc-form-field-icon-prefix mat-icon {
+  color: var(--text-muted) !important;
+}
+
+// ── Select (mat-select) ───────────────────────────────────────────────────────
+// The selected value shown in the trigger
+.mat-mdc-select-value,
+.mat-mdc-select-value-text,
+.mat-mdc-select-trigger {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+// Placeholder when no value selected
+.mat-mdc-select-placeholder {
+  color: var(--text-muted) !important;
+}
+
+// Arrow icon
+.mat-mdc-select-arrow svg,
+.mat-mdc-select-arrow {
+  fill: var(--text-muted) !important;
+  color: var(--text-muted) !important;
+}
+
+// ── Select Dropdown Overlay Panel ────────────────────────────────────────────
+.mat-mdc-select-panel,
+.mdc-menu-surface,
+.mat-mdc-autocomplete-panel {
+  background-color: #1a2240 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+}
+
+// Option items in dropdown
+.mat-mdc-option,
+.mdc-list-item {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+.mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.mat-mdc-option:focus:not(.mdc-list-item--disabled) {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  .mdc-list-item__primary-text {
+    color: #60a5fa !important;
+  }
+}
+
+// ── Checkbox ─────────────────────────────────────────────────────────────────
+.mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.mat-mdc-checkbox .mdc-form-field label {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+// ── Textarea / Input placeholders ─────────────────────────────────────────────
+::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1;
+}
+
+// ── Mat Hint / Error ──────────────────────────────────────────────────────────
+.mat-mdc-form-field-hint {
+  color: var(--text-muted) !important;
+  font-size: 13px !important;
+}
+
+.mat-mdc-form-field-error {
+  font-size: 13px !important;
+}
+
+// ── Mat Menu ─────────────────────────────────────────────────────────────────
+.mat-mdc-menu-panel {
+  background-color: #1a2240 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+.mat-mdc-menu-item {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+.mat-mdc-menu-item:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+.mat-mdc-tooltip .mdc-tooltip__surface {
+  background-color: #1a2240 !important;
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+// ── Chips ─────────────────────────────────────────────────────────────────────
+.mat-mdc-chip {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  color: #60a5fa !important;
+  font-size: 14px !important;
+}
+
 
 // Status Badges
 .badge {
@@ -231,4 +405,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .mat-mdc-dialog-content {
   color: var(--text-secondary) !important;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary-color) !important;
+  outline-offset: 2px !important;
 }

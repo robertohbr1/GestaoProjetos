@@ -32,7 +32,7 @@
       <div class="user-info" *ngIf="authService.isLoggedIn()">
         <span class="user-name">{{ authService.currentUser() }}</span>
         <span class="user-role badge status-backlog">{{ authService.userRole() }}</span>
-        <button mat-icon-button (click)="logout()" title="Sair do sistema">
+        <button mat-icon-button (click)="logout()" title="Sair do sistema" aria-label="Sair do sistema">
           <mat-icon color="warn">logout</mat-icon>
         </button>
       </div>
