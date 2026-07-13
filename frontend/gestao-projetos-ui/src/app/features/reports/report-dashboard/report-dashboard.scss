@@ -7,7 +7,7 @@
 .subtitle {
   color: var(--text-secondary);
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 // KPI Grid
@@ -129,6 +129,8 @@
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  // Explicit color required — MDC light theme injects dark text on dark background
+  color: var(--text-primary);
 }
 
 .report-item.clickable:hover {
@@ -144,7 +146,7 @@
 }
 
 .item-meta {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-secondary);
 }
 
@@ -172,6 +174,8 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
 }
@@ -190,8 +194,10 @@
   background-color: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  padding: 8px 14px;
-  font-size: 14px;
+  padding: 10px 14px;
+  font-size: 15px;
+  // Explicit color required — MDC light theme injects rgba(0,0,0,0.87) which is invisible on dark bg
+  color: var(--text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -200,7 +206,7 @@
 
 .dev-issue-item.clickable:hover {
   border-color: var(--primary-color);
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(255, 255, 255, 0.06);
   cursor: pointer;
 }
 
@@ -208,10 +214,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .empty-dev {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-muted);
   text-align: center;
   padding: 14px;
@@ -277,7 +286,9 @@
 }
 
 .pending-title {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .pending-meta-row {
@@ -285,12 +296,13 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-secondary);
 }
 
 .pending-deadline {
   font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .deadline-overdue {

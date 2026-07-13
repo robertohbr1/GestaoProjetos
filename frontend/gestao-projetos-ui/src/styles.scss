@@ -338,14 +338,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-// Status Badges
+// Status Badges — minimum 13px per WCAG AA (badge/counter context)
 .badge {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
   border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px !important;
+  font-weight: 600 !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -411,3 +411,114 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--primary-color) !important;
   outline-offset: 2px !important;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAT-BUTTON DARK-THEME OVERRIDES (WCAG AA)
+// mat-button inherits color from the light MDC theme by default.
+// On dark backgrounds it produces dark-on-dark text (fails WCAG AA).
+// These rules force legible text for ALL mat-button variants in dark context.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Generic uncolored mat-button — force white text on dark background
+.mat-mdc-button:not([color]),
+.mat-mdc-outlined-button:not([color]),
+.mat-mdc-button-base:not([color]) .mdc-button__label {
+  color: var(--text-primary) !important;
+}
+
+// mat-button used as status / priority triggers inside table cells
+// They inherit their color from .status-* and .priority-* utility classes.
+// We must ensure the MDC button wrapper doesn't override those classes.
+.priority-trigger-btn,
+.status-trigger-btn {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  // color comes from .priority-low, .priority-medium, etc. — do NOT override color here
+}
+
+// Ensure MDC button label inside priority/status triggers inherits parent color
+.priority-trigger-btn .mdc-button__label,
+.status-trigger-btn .mdc-button__label {
+  color: inherit !important;
+  font-size: 15px !important;
+}
+
+// mat-menu-item text (status/priority dropdowns in menu)
+.mat-mdc-menu-item .mdc-list-item__primary-text {
+  color: var(--text-primary) !important;
+  font-size: 15px !important;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE CELL FONT SIZE ENFORCEMENT (WCAG AA — minimum 15px)
+// ─────────────────────────────────────────────────────────────────────────────
+.mat-mdc-cell,
+.mat-mdc-cell * {
+  font-size: 15px !important;
+}
+
+// Header cells: 14px is acceptable for column headers (secondary/label text)
+.mat-mdc-header-cell {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
+  letter-spacing: 0.03em !important;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BADGE FONT SIZE ENFORCEMENT (minimum 13px per AGENTS.md)
+// ─────────────────────────────────────────────────────────────────────────────
+.badge {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FORM FIELD LABEL AND INPUT FONT SIZE (minimum 15px per AGENTS.md)
+// Applied globally — covers all components (issue-list, issue-detail, login,
+// project-list, report-dashboard, timesheet-dialog)
+// ─────────────────────────────────────────────────────────────────────────────
+.mat-mdc-form-field,
+.mat-mdc-form-field input,
+.mat-mdc-form-field textarea,
+.mat-mdc-form-field .mat-mdc-select,
+.mat-mdc-form-field .mdc-text-field__input {
+  font-size: 15px !important;
+}
+
+// Subtitle / secondary text in forms and cards
+.subtitle,
+.project-info,
+.item-meta,
+.log-info,
+.comment-date,
+.audit-date,
+.audit-values,
+.attachment-meta-text,
+.pending-meta-row,
+.empty-dev {
+  font-size: 14px !important;
+  color: var(--text-secondary) !important;
+}
+
+// Description / body text in cards — must be readable (15px)
+.comment-text,
+.log-desc,
+.audit-desc,
+.pending-title,
+.attachment-name {
+  font-size: 15px !important;
+  color: var(--text-primary) !important;
+  line-height: 1.6 !important;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PAGINATOR TEXT (14px for secondary navigation text)
+// ─────────────────────────────────────────────────────────────────────────────
+.mat-mdc-paginator-range-label,
+.mat-mdc-paginator-page-size-label {
+  font-size: 14px !important;
+  color: var(--text-secondary) !important;
+}
+
